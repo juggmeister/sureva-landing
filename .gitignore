@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.claude/
+.env
+.env.*
+
+# Blender output (~280 MB of PNG frames). Regenerate with scripts/blender, then
+# `node scripts/build-media.mjs` packs them into public/media, which is committed.
+assets-src/renders/
+
+# reference files the build doesn't use
+assets-src/motion.mp4
+assets-src/assembled.png
+assets-src/exploded.png

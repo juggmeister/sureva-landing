@@ -1,0 +1,25 @@
+{
+  "name": "sureva-landing",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "renders": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/blender/render-all.ps1",
+    "media": "node scripts/build-media.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/instrument-sans": "^5.3.0",
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.0",
+    "uqr": "^0.1.3"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4",
+    "vite": "^7.0.0"
+  }
+}

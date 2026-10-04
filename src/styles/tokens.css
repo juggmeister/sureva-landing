@@ -1,0 +1,79 @@
+/* Tokens mirror App/constants/colors.js. Nothing here is invented. */
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Semibold.otf') format('opentype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --white: #ffffff;
+  --canvas: #f7f4ef;
+  --surface: #f2eee7;
+  --orange-wash: #ffede2;
+  --orange-wash-dark: #ffd9c2;
+  --charcoal: #1a1712;
+  --charcoal-high: #26221b;
+  --charcoal-border: rgba(255, 255, 255, 0.08);
+  --ink: #17140e;
+  --ink-mid: #4a4439;
+  --muted: #766f64;
+  --on-dark: #ffffff;
+  --on-dark-muted: rgba(255, 255, 255, 0.56);
+  --orange-light: #ffe3d2;
+  --orange-mid: #ffb088;
+  --orange: #ff5a1f;
+  --orange-dark: #d9430c;
+  --grad-orange: linear-gradient(135deg, #ff7a33, #ff4400);
+  --grad-charcoal: linear-gradient(180deg, #262119, #14110c);
+  --navy-light: #e8ebf2;
+  --navy: #2c3b5c;
+  --border: #ece6dc;
+  --protected: #2ecc71;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --amber-led: #ffa23b; /* the device LED, from the render scene */
+
+  /* site type: Instrument Sans headings, Geist body and UI chrome */
+  --font-display: 'Instrument Sans Variable', 'Instrument Sans', system-ui, sans-serif;
+  --font-head: 'Geist Variable', 'Geist', system-ui, sans-serif;
+  --font-body: 'Geist Variable', 'Geist', system-ui, sans-serif;
+  /* the hero hook only */
+  --font-hook: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+  /* the app's own face, kept for phone screens and app cards so they match the real product */
+  --font-app: 'Outfit', system-ui, sans-serif;
+
+  /* warm, ink-tinted shadows only */
+  --shadow-card: 0 1px 2px rgba(23, 20, 14, 0.04), 0 6px 14px rgba(23, 20, 14, 0.06);
+  --shadow-lift: 0 2px 4px rgba(23, 20, 14, 0.05), 0 14px 26px rgba(23, 20, 14, 0.12);
+  --shadow-cta: 0 5px 10px rgba(255, 90, 31, 0.3);
+  --shadow-cta-hover: 0 10px 22px rgba(255, 90, 31, 0.38);
+  --ring: 0 0 0 4px rgba(255, 90, 31, 0.18);
+
+  --radius-card: 28px;
+  --radius-tile: 16px;
+  --radius-pill: 999px;
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --max: 1320px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+}

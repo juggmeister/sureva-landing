@@ -1,0 +1,349 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img,
+canvas,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--orange-wash-dark);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font: 500 14px/1 var(--font-head);
+  transform: translateY(-160%);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.skip:focus-visible {
+  transform: none;
+}
+
+/* ── wordmark: the brand PNG used as a mask so it takes any token colour ── */
+.wordmark {
+  display: block;
+  width: 104px;
+  aspect-ratio: 640 / 92;
+  background: currentColor;
+  -webkit-mask: url('/brand/wordmark-mask.png') center / contain no-repeat;
+  mask: url('/brand/wordmark-mask.png') center / contain no-repeat;
+}
+
+/* ── buttons ── */
+.btn {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: 500 15px/1 var(--font-head);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 0.45s var(--ease-out),
+    box-shadow 0.45s var(--ease-out),
+    background-color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn--sm {
+  min-height: 42px;
+  padding: 0 18px;
+  font-size: 14px;
+}
+
+.btn--primary {
+  color: var(--white);
+  background: var(--grad-orange);
+  box-shadow: var(--shadow-cta);
+}
+
+/* warm highlight that follows the pointer across the button */
+.btn--primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(120px circle at var(--mx) var(--my), rgba(255, 214, 170, 0.45), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-cta-hover);
+}
+
+.btn--primary:hover::before {
+  opacity: 1;
+}
+
+.btn--primary:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.12s;
+}
+
+.btn--primary:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-cta), 0 0 0 4px rgba(255, 90, 31, 0.3);
+}
+
+/* the iOS prompt: near-black like an App Store button, warming on hover */
+.btn--ios {
+  color: var(--white);
+  background: linear-gradient(180deg, #2c2721, #14110c);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 18px rgba(23, 20, 14, 0.22);
+}
+
+.btn--ios svg {
+  width: 1.15em;
+  height: 1.15em;
+  margin-top: -0.15em;
+}
+
+.btn--ios::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(130px circle at var(--mx) var(--my), rgba(255, 122, 51, 0.38), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.btn--ios:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 14px 28px rgba(23, 20, 14, 0.28);
+}
+
+.btn--ios:hover::before {
+  opacity: 1;
+}
+
+.btn--ios:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.12s;
+}
+
+.btn--ios:focus-visible {
+  outline: none;
+  box-shadow: 0 8px 18px rgba(23, 20, 14, 0.22), 0 0 0 4px rgba(255, 90, 31, 0.35);
+}
+
+/* ── nav: a floating pill, centred ── */
+.nav {
+  position: fixed;
+  inset: 18px 0 auto;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 0 12px;
+  pointer-events: none;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.nav__pill {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding: 6px 6px 6px 22px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: saturate(1.5) blur(18px);
+  backdrop-filter: saturate(1.5) blur(18px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 1px 2px rgba(23, 20, 14, 0.04),
+    0 8px 24px rgba(23, 20, 14, 0.07);
+  color: var(--ink);
+  pointer-events: auto;
+  transition: background-color 0.4s, box-shadow 0.4s;
+}
+
+.nav.is-solid .nav__pill {
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow:
+    inset 0 0 0 1px var(--border),
+    0 10px 30px rgba(23, 20, 14, 0.09);
+}
+
+.nav.is-hidden {
+  transform: translateY(calc(-100% - 24px));
+}
+
+.nav__brand {
+  padding: 8px 0;
+}
+
+.nav__links {
+  display: flex;
+  gap: 28px;
+  font: 400 15px/1 var(--font-head);
+  color: var(--ink-mid);
+}
+
+.nav__links a {
+  position: relative;
+  padding: 8px 0;
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+
+@media (max-width: 1040px) {
+  .nav__links {
+    gap: 18px;
+    font-size: 14px;
+  }
+}
+
+/* five links don't fit beside the button on small tablets; FAQ is the one that goes */
+@media (max-width: 860px) {
+  .nav__links a[href='#faq'] {
+    display: none;
+  }
+}
+
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1.5px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s var(--ease-out);
+}
+
+.nav__links a:hover {
+  color: var(--ink);
+}
+
+.nav__links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@media (max-width: 760px) {
+  .nav {
+    top: 12px;
+  }
+  .nav__pill {
+    gap: 20px;
+    padding-left: 18px;
+  }
+  .nav__links {
+    display: none;
+  }
+  .wordmark {
+    width: 88px;
+  }
+}
+
+/* split words for reveals */
+.w {
+  display: inline-block;
+  overflow: clip;
+  overflow-clip-margin: 0.12em;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.w > span {
+  display: inline-block;
+  will-change: transform;
+}

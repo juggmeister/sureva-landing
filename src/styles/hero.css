@@ -1,0 +1,564 @@
+.hero {
+  --pw: clamp(214px, min(23vw, 38vh), 340px); /* phone width drives the whole scene */
+  padding: 12px;
+}
+
+.hero__panel {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(100svh - 24px);
+  padding-top: clamp(86px, 10vh, 118px);
+  border-radius: 32px;
+  overflow: hidden;
+  /* shown until (or instead of) the WebGL sky */
+  background:
+    radial-gradient(60% 34% at 50% 66%, rgba(255, 179, 92, 0.34), transparent 70%),
+    radial-gradient(40% 22% at 20% 62%, rgba(255, 138, 91, 0.22), transparent 70%),
+    radial-gradient(40% 22% at 80% 62%, rgba(255, 196, 163, 0.35), transparent 70%),
+    linear-gradient(180deg, #f1ede8 0%, #faf1e8 45%, var(--canvas) 78%);
+}
+
+.hero__sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-soft);
+}
+
+.hero__sky.is-live {
+  opacity: 1;
+}
+
+/* the phone melts into the page at the bottom of the panel, as it does on bevel */
+.hero__panel::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  height: 24%;
+  background: linear-gradient(180deg, rgba(247, 244, 239, 0), var(--canvas) 88%);
+  pointer-events: none;
+}
+
+.hero__copy {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 var(--gutter);
+  text-align: center;
+}
+
+.hero__title {
+  max-width: 24ch;
+  margin: 0 auto;
+  font-family: var(--font-hook);
+  font-weight: 400;
+  font-size: clamp(2.4rem, min(4.7vw, 7.3vh), 5rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* brand orange deepening toward orangeDark, so the line holds up on the light sky;
+   applied per word because each word animates on its own */
+.hero__title .accent,
+.hero__title .accent .w > span {
+  color: var(--orange);
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .hero__title .accent .w > span {
+    background: linear-gradient(180deg, #ff6a2b 12%, var(--orange-dark) 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* the brand wordmark set inline: its letters are all x-height, so it sits on the
+   baseline at the headline's x-height and takes the same orange */
+.logo-word {
+  display: inline-block;
+  height: 0.56em;
+  aspect-ratio: 640 / 92;
+  /* the mark is widely tracked, so a normal word space looks cramped after it */
+  margin-right: 0.16em;
+  background: linear-gradient(180deg, #ff6a2b 12%, var(--orange-dark) 92%);
+  -webkit-mask: url('/brand/wordmark-mask.png') center / contain no-repeat;
+  mask: url('/brand/wordmark-mask.png') center / contain no-repeat;
+  vertical-align: baseline;
+}
+
+.hero__title .accent .w > span:has(.logo-word) {
+  background: none;
+}
+
+.hero__lede {
+  max-width: 50ch;
+  margin: clamp(16px, 2.6vh, 26px) auto 0;
+  font-size: clamp(16px, 1.3vw, 19.5px);
+  line-height: 1.5;
+  color: var(--ink-mid);
+  text-wrap: pretty;
+}
+
+.hero__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(20px, 3.2vh, 30px);
+}
+
+.hero__cta .btn {
+  min-height: 54px;
+  padding: 0 26px;
+  font-size: 16px;
+}
+
+.hero__cta-note {
+  font: 400 13.5px/1.4 var(--font-head);
+  color: var(--muted);
+}
+
+/* ── scene ── */
+.scene {
+  position: relative;
+  z-index: 2;
+  width: var(--pw);
+  height: calc(var(--pw) * 1.72);
+  margin-top: clamp(32px, 5vh, 64px);
+  perspective: 1800px;
+}
+
+.scene > * {
+  position: absolute;
+  will-change: transform;
+}
+
+.scene__phone {
+  inset: 0 0 auto;
+}
+
+/* the phone's shadow on the light behind it, cast down and to the left */
+.scene__phone::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 8% 6% -6% 2%;
+  border-radius: 20% / 10%;
+  background: rgba(60, 38, 20, 0.34);
+  filter: blur(36px);
+  transform: translate(-14%, 7%) rotate(-6deg);
+}
+
+.scene__device {
+  z-index: 3;
+  width: calc(var(--pw) * 1.04);
+  aspect-ratio: var(--float-aspect, 1.6);
+  left: calc(var(--pw) * 0.74);
+  top: calc(var(--pw) * 0.66);
+  /* key light is front-right in the renders, so shadows fall down and to the left;
+     this one also lands on the phone behind it, which sells the gap between them */
+  filter:
+    drop-shadow(-18px 40px 34px rgba(60, 38, 20, 0.3))
+    drop-shadow(-6px 14px 14px rgba(60, 38, 20, 0.2))
+    drop-shadow(0 3px 4px rgba(60, 38, 20, 0.14));
+}
+
+.float__canvas,
+.float__still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.float__canvas {
+  opacity: 0;
+}
+
+.scene__device.has-sequence .float__canvas {
+  opacity: 1;
+}
+
+.scene__device.has-sequence .float__still {
+  visibility: hidden;
+}
+
+.float__led {
+  position: absolute;
+  left: calc(var(--led-x, 0.2) * 100%);
+  top: calc(var(--led-y, 0.43) * 100%);
+  width: 9%;
+  aspect-ratio: 1.5;
+  transform: translate(-50%, -50%) rotate(-8deg);
+}
+
+/* <i> is the tap flash (GSAP); ::before is the idle breathing (CSS) */
+.float__led i,
+.float__led::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 196, 120, 0.95), rgba(255, 162, 59, 0.5) 50%, rgba(255, 162, 59, 0));
+  opacity: 0;
+}
+
+.float__led::before {
+  content: '';
+}
+
+.float__led.is-live::before {
+  animation: led-breathe 2.6s ease-in-out infinite alternate;
+}
+
+@keyframes led-breathe {
+  from {
+    opacity: 0.22;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float__led.is-live::before {
+    animation: none;
+    opacity: 0.45;
+  }
+}
+
+.float__led::after {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  border: 1.5px solid rgba(255, 162, 59, 0.75);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.float__led.is-tapping::after {
+  animation: led-ripple 1.5s var(--ease-soft) both;
+}
+
+@keyframes led-ripple {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.4);
+  }
+}
+
+/* ── floating cards: solid white like the app's cards, never glass over the sky ── */
+.card {
+  z-index: 4;
+  border: 1px solid rgba(236, 230, 220, 0.9);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 1px 2px rgba(23, 20, 14, 0.04),
+    0 16px 36px -8px rgba(60, 38, 20, 0.16);
+  font-family: var(--font-app);
+  color: var(--ink);
+}
+
+/* iOS-style notification stack: newest in front, older ones tucked behind */
+.alerts {
+  z-index: 4;
+  width: clamp(236px, calc(var(--pw) * 1.02), 300px);
+  height: 96px;
+  left: calc(var(--pw) * 0.62);
+  top: calc(var(--pw) * 0.06);
+}
+
+.alert {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  min-height: 86px; /* equal heights keep the stacked edges tidy */
+  padding: 12px 14px 13px 12px;
+  border-radius: 22px;
+  transform-origin: 50% 0;
+}
+
+.card__appicon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+}
+
+.card__notif-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.card__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.card__title {
+  margin-top: 1px;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.card__text {
+  margin-top: 1px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink-mid);
+}
+
+.card--uv {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  right: calc(100% + var(--pw) * 0.22);
+  top: calc(var(--pw) * 0.36);
+  padding: 10px 18px 10px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.card__badge {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--orange-wash);
+  color: var(--orange-dark);
+}
+
+.card__badge svg {
+  width: 19px;
+  height: 19px;
+}
+
+.card__uv {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.card__uv small {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.card__uv b {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.card__uv em {
+  font-style: normal;
+  color: var(--warning);
+}
+
+.card--factors {
+  width: 228px;
+  right: calc(100% + var(--pw) * 0.1);
+  top: calc(var(--pw) * 0.86);
+  padding: 15px 16px 6px;
+}
+
+.card__head {
+  margin-bottom: 12px;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.fm {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 6px;
+  margin-bottom: 11px;
+  font-size: 12.5px;
+}
+
+.fm span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fm svg {
+  width: 13px;
+  height: 13px;
+  color: var(--c);
+}
+
+.fm b {
+  font-weight: 400;
+  color: var(--c);
+  font-variant-numeric: tabular-nums;
+}
+
+.fm i {
+  grid-column: 1 / -1;
+  height: 7px;
+  border-radius: 4px;
+  background: linear-gradient(var(--c), var(--c)) 0 0 / calc(var(--share) * 100% * var(--fill, 1)) 100% no-repeat, var(--surface);
+}
+
+@media (max-width: 1100px) {
+  .card--factors {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero {
+    --pw: min(56vw, 232px);
+    padding: 8px;
+  }
+  .hero__panel {
+    border-radius: 26px;
+    padding-top: 84px;
+  }
+  .hero__title {
+    /* keeps "and so does your skin." on one line down to 375px */
+    font-size: clamp(1.75rem, 7.9vw, 2.6rem);
+  }
+  .scene {
+    margin-top: 72px;
+  }
+  .scene__device {
+    width: calc(var(--pw) * 1.05);
+    left: calc(var(--pw) * 0.47);
+    top: calc(var(--pw) * 0.92);
+  }
+  .alerts {
+    width: min(212px, 60vw);
+    left: calc(var(--pw) * 0.3);
+    top: calc(var(--pw) * -0.2);
+  }
+  .alert {
+    min-height: 92px;
+    padding: 10px 12px 11px 10px;
+  }
+  .card__appicon {
+    width: 30px;
+    height: 30px;
+  }
+  .card__title {
+    font-size: 14px;
+  }
+  .card__text {
+    font-size: 12px;
+  }
+  .card--uv {
+    right: auto;
+    left: calc(var(--pw) * -0.34);
+    top: calc(var(--pw) * 1.18);
+    padding: 7px 14px 7px 7px;
+  }
+  .card__badge {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 420px) {
+  .field {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 26px;
+  }
+  .field input {
+    height: 48px;
+    text-align: center;
+    padding: 0 14px;
+  }
+  .field .btn {
+    width: 100%;
+  }
+}
+
+/* ── waitlist field (shared) ── */
+.waitlist {
+  width: min(470px, 100%);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.25s,
+    box-shadow 0.35s var(--ease-out);
+}
+
+.field:focus-within {
+  border-color: var(--orange);
+  box-shadow: var(--shadow-card), var(--ring);
+}
+
+.field.is-invalid {
+  border-color: var(--danger);
+  animation: field-nudge 0.4s var(--ease-out);
+}
+
+@keyframes field-nudge {
+  30% {
+    transform: translateX(-4px);
+  }
+  60% {
+    transform: translateX(3px);
+  }
+}
+
+.field input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 14px 0 18px;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  outline: none;
+}
+
+.field input::placeholder {
+  color: var(--muted);
+}
+
+.waitlist__note {
+  margin-top: 12px;
+  padding-left: 20px;
+  font: 400 13.5px/1.4 var(--font-head);
+  color: var(--muted);
+  transition: color 0.3s;
+}
+
+.waitlist.is-done .waitlist__note {
+  color: var(--ink-mid);
+}
+
+.waitlist.is-done .field {
+  border-color: var(--protected);
+}

@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Sureva: know when your sunscreen actually wore off</title>
+    <meta name="description" content="Sureva is a small wearable that reads UV, heat, humidity and movement, and tells you when to reapply sunscreen. Coming soon to iPhone." />
+    <meta name="theme-color" content="#F7F4EF" />
+    <link rel="icon" type="image/png" href="/brand/favicon-64.png" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></symbol>
+        <symbol id="i-drop" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.8c3.4 4.3 6.3 7.9 6.3 11.4a6.3 6.3 0 0 1-12.6 0c0-3.5 2.9-7.1 6.3-11.4z"/></symbol>
+        <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M14.5 5.5 8 12l6.5 6.5"/></symbol>
+        <symbol id="i-therm" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0z"/><circle cx="12" cy="17.6" r="1.8" fill="currentColor"/></symbol>
+        <symbol id="i-move" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M3 12.5h3.6l2.6-6.5 4.6 12 2.6-5.5H21"/></symbol>
+        <symbol id="i-humid" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M9.5 4.5c2.4 3 4.4 5.6 4.4 8a4.4 4.4 0 0 1-8.8 0c0-2.4 2-5 4.4-8z"/><path fill="currentColor" d="M17 10.5c1.4 1.8 2.6 3.3 2.6 4.7a2.6 2.6 0 0 1-5.2 0c0-1.4 1.2-2.9 2.6-4.7z"/></symbol>
+        <symbol id="i-apple" viewBox="0 0 24 24"><path fill="currentColor" d="M16.4 12.6c0-2.9 2.4-4.2 2.5-4.3-1.4-2-3.4-2.2-4.2-2.3-1.8-.2-3.5 1-4.4 1s-2.3-1-3.8-1C4.6 6 2.8 7.1 1.8 8.9c-2 3.5-.5 8.6 1.4 11.5 1 1.4 2.1 2.9 3.6 2.9 1.4-.1 2-1 3.7-1s2.2 1 3.8.9c1.5 0 2.5-1.4 3.5-2.8 1.1-1.6 1.5-3.2 1.6-3.2-.1 0-3-1.2-3-4.6zM13.5 4.2c.8-1 1.3-2.3 1.2-3.6-1.1 0-2.5.8-3.4 1.7-.7.9-1.4 2.2-1.2 3.5 1.3.1 2.6-.6 3.4-1.6z"/></symbol>
+        <symbol id="i-flash" viewBox="0 0 24 24"><path fill="currentColor" d="M13.4 2 4.6 13.6h6.2l-1.2 8.4 8.8-11.8h-6.2z"/></symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4 4.4 5.4v6.1c0 4.8 3.2 8.8 7.6 10.1 4.4-1.3 7.6-5.3 7.6-10.1V5.4z"/><path fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m8.6 12 2.4 2.4 4.6-4.8"/></symbol>
+        <symbol id="i-time" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"/><path fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" d="M12 7v5.2l3.2 2"/></symbol>
+        <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3" fill="currentColor"/><path stroke="#fff" stroke-width="1.6" stroke-linecap="round" d="M3.5 9.8h17M8 3v4M16 3v4"/></symbol>
+        <symbol id="i-warn" viewBox="0 0 24 24"><path fill="currentColor" d="M10.3 3.6a2 2 0 0 1 3.4 0l8 13.9a2 2 0 0 1-1.7 3H4a2 2 0 0 1-1.7-3z"/><path stroke="#fff" stroke-width="2" stroke-linecap="round" d="M12 9v4.6M12 17h.01"/></symbol>
+        <symbol id="i-home" viewBox="0 0 24 24"><path fill="currentColor" d="M3.8 11 12 4l8.2 7v8.4c0 .9-.7 1.6-1.6 1.6h-4v-5.6h-5.2V21h-4c-.9 0-1.6-.7-1.6-1.6z"/></symbol>
+        <symbol id="i-cloudsun" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.4" fill="currentColor"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M9 2.4v1.2M3 8.5h1.2M4.8 4.3l.8.8M13.2 4.3l-.8.8"/><path fill="currentColor" d="M8.5 20a4 4 0 0 1-.4-8 5.2 5.2 0 0 1 9.9 1.3A3.4 3.4 0 0 1 17.6 20z"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8.5" rx="1.4" fill="currentColor"/><rect x="10" y="6" width="4" height="14.5" rx="1.4" fill="currentColor"/><rect x="16" y="9" width="4" height="11.5" rx="1.4" fill="currentColor"/></symbol>
+        <symbol id="i-flame" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c4 0 7-2.9 7-6.9 0-3.8-2.6-6.3-4.3-8.9-.4 2-1.5 3.4-2.7 3.9.3-3.4-1.2-6.4-3.4-8.1.2 3.3-1.7 5.6-3.3 7.7C4.3 11.4 5 13.4 5 15.1 5 19.1 8 22 12 22z"/></symbol>
+        <symbol id="i-umbrella" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3.2a9 9 0 0 1 9 8.8H3a9 9 0 0 1 9-8.8z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 12v6.4a2 2 0 0 0 4 0"/></symbol>
+        <symbol id="i-wave" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M2.5 9.5c1.6 0 1.6-1.6 3.2-1.6s1.6 1.6 3.2 1.6 1.5-1.6 3.1-1.6 1.6 1.6 3.2 1.6 1.6-1.6 3.1-1.6 1.6 1.6 3.2 1.6M2.5 15.5c1.6 0 1.6-1.6 3.2-1.6s1.6 1.6 3.2 1.6 1.5-1.6 3.1-1.6 1.6 1.6 3.2 1.6 1.6-1.6 3.1-1.6 1.6 1.6 3.2 1.6"/></symbol>
+        <symbol id="i-snow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.6 4.6 12 7l2.4-2.4M9.6 19.4 12 17l2.4 2.4"/></symbol>
+        <symbol id="i-leaf" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 19.5C5 11 10 5.5 20 4.5c-.6 10-5.8 15-14 15M5 19.5l7.5-7.5"/></symbol>
+        <symbol id="i-music" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 18V5.6l10-2.1v12.3"/><circle cx="6.5" cy="18" r="2.6" fill="currentColor"/><circle cx="16.5" cy="15.8" r="2.6" fill="currentColor"/></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      </defs>
+    </svg>
+
+    <header class="nav" data-nav>
+      <div class="nav__pill">
+        <a class="nav__brand" href="#top" aria-label="Sureva, back to top"><span class="wordmark" aria-hidden="true"></span></a>
+        <nav class="nav__links" aria-label="Sections">
+          <a href="#how">How it works</a>
+          <a href="#days">Use cases</a>
+          <a href="#inside">Inside</a>
+          <a href="#app">The app</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <button class="btn btn--ios btn--sm" type="button" data-open-waitlist><svg aria-hidden="true"><use href="#i-apple"/></svg>Get early access</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title" data-hero>
+        <div class="hero__panel" data-hero-panel>
+          <canvas class="hero__sky" data-sky aria-hidden="true"></canvas>
+
+          <div class="hero__copy">
+            <h1 class="hero__title" id="hero-title" data-split>Sunscreen expires,<br> and so does your skin.<br> <span class="accent"><span class="logo-word" data-word><span class="sr-only">Sureva</span></span> tells you when.</span></h1>
+            <p class="hero__lede" data-hero-fade>Sureva senses UV, heat, humidity and how much you’re moving, and works out when your sunscreen has actually worn off.</p>
+            <div class="hero__cta" data-hero-fade>
+              <button class="btn btn--ios" type="button" data-open-waitlist data-magnetic><svg aria-hidden="true"><use href="#i-apple"/></svg>Get early access</button>
+              <p class="hero__cta-note">Coming soon to iPhone</p>
+            </div>
+          </div>
+
+          <div class="scene" data-scene aria-hidden="true">
+            <div class="scene__phone" data-depth="0.4">
+              <div class="phone" data-phone>
+                <div class="phone__layers"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="phone__body">
+                  <div class="phone__bezel">
+                    <div class="screen">
+                      <div class="pages" data-pages>
+                        <!-- Active Session: the app's live protection screen -->
+                        <div class="app app--session" data-page="session">
+                          <div class="tb">
+                            <span class="tb__back"><svg><use href="#i-back"/></svg></span>
+                            <span class="tb__mid"><span class="tb__timer" data-elapsed>0:42:18</span><span class="tb__live"><i></i>LIVE</span></span>
+                            <span class="tb__end">End</span>
+                          </div>
+                          <div class="sh">
+                            <i class="sh__blob sh__blob--a"></i><i class="sh__blob sh__blob--b"></i><i class="sh__blob sh__blob--c"></i>
+                            <div class="sh__ring">
+                              <i class="sh__glow"></i>
+                              <svg class="ring" viewBox="0 0 200 200">
+                                <defs><linearGradient id="ring-green" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3BDD83"/><stop offset="1" stop-color="#1FAE57"/></linearGradient></defs>
+                                <circle class="ring__track" cx="100" cy="100" r="86"/>
+                                <circle class="ring__fill" cx="100" cy="100" r="86"/>
+                                <g class="ring__ticks" data-ticks></g>
+                              </svg>
+                              <div class="sh__centre">
+                                <span class="sh__pct"><b data-pct>74</b><small>%</small></span>
+                                <span class="sh__status">Protected</span>
+                              </div>
+                            </div>
+                            <div class="sh__count"><span>Reapply in</span><b data-mins>~38 min</b><span data-clock>at 2:40 PM</span></div>
+                            <div class="sh__bar"><i></i></div>
+                          </div>
+                          <div class="dc">
+                            <span class="dc__icon"><svg><use href="#i-sun"/></svg></span>
+                            <span class="dc__text"><small>WHAT’S DRAINING YOU</small>Humid heat and a lot of movement. Sweat is wearing your SPF down faster than usual.</span>
+                          </div>
+                          <div class="ss">
+                            <span><b>0:42</b><small>ELAPSED</small></span>
+                            <span><b>1</b><small>REAPPLIES</small></span>
+                            <span><b class="is-warn">8.2</b><small>PEAK UV</small></span>
+                          </div>
+                          <div class="app__cta"><span><svg><use href="#i-drop"/></svg>Applied Sunscreen</span></div>
+                        </div>
+                      </div>
+
+                      <div class="sb"><span class="sb__time">9:41</span><svg class="sb__icons" viewBox="0 0 68 12"><g fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="4.6" y="5.6" width="3" height="6.4" rx="1"/><rect x="9.2" y="3.2" width="3" height="8.8" rx="1"/><rect x="13.8" y="0.6" width="3" height="11.4" rx="1"/><path d="M30.5 2.2c2.6 0 5 1 6.8 2.7l1.3-1.3A11.4 11.4 0 0 0 30.5.3a11.4 11.4 0 0 0-8.1 3.3l1.3 1.3a9.5 9.5 0 0 1 6.8-2.7zm0 3.8c1.6 0 3 .6 4.1 1.6l1.3-1.3a7.6 7.6 0 0 0-10.8 0l1.3 1.3A5.8 5.8 0 0 1 30.5 6zm0 3.7c.6 0 1.1.2 1.5.6l-1.5 1.6-1.5-1.6c.4-.4.9-.6 1.5-.6z"/><rect x="43.5" y="0.8" width="21" height="10.4" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="45.3" y="2.6" width="15.4" height="6.8" rx="1.6"/><rect x="65.6" y="4" width="1.6" height="4" rx=".8" opacity=".4"/></g></svg></div>
+
+                      <div class="tabbar" data-tabbar>
+                        <i class="tabbar__ind" data-tab-ind></i>
+                        <span data-tab="home"><svg><use href="#i-home"/></svg><small>Home</small></span>
+                        <span data-tab="forecast"><svg><use href="#i-cloudsun"/></svg><small>Forecast</small></span>
+                        <span data-tab="history"><svg><use href="#i-time"/></svg><small>History</small></span>
+                        <span data-tab="insights"><svg><use href="#i-chart"/></svg><small>Insights</small></span>
+                        <span data-tab="streaks"><svg><use href="#i-flame"/></svg><small>Streaks</small><em>52</em></span>
+                      </div>
+
+                      <i class="touch" data-touch></i>
+                      <i class="app__home"></i>
+                    </div>
+                    <i class="phone__island"></i>
+                    <i class="phone__glare"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- floating device, turns with the cursor and with scroll -->
+            <div class="scene__device" data-depth="1.1" data-float>
+              <canvas class="float__canvas" data-float-canvas></canvas>
+              <img class="float__still" data-float-still src="/media/float/960/012.webp" alt="" decoding="async" />
+              <span class="float__led" data-float-led><i></i></span>
+            </div>
+
+            <!-- notifications stack like iOS: newest in front -->
+            <div class="alerts" data-depth="0.9" data-alerts></div>
+
+            <div class="card card--uv" data-depth="0.7" data-card data-uv>
+              <span class="card__badge"><svg><use href="#i-sun"/></svg></span>
+              <span class="card__uv"><small>UV index</small><b><em data-uv-val>8.2</em> <span data-uv-label>Very high</span></b></span>
+            </div>
+
+            <div class="card card--factors" data-depth="0.8" data-card data-factors>
+              <p class="card__head">What’s wearing it down</p>
+              <div class="fm" style="--share:.42;--c:var(--orange)"><span><svg><use href="#i-sun"/></svg>UV</span><b>42%</b><i></i></div>
+              <div class="fm" style="--share:.27;--c:var(--warning)"><span><svg><use href="#i-therm"/></svg>Heat</span><b>27%</b><i></i></div>
+              <div class="fm" style="--share:.19;--c:var(--orange-mid)"><span><svg><use href="#i-move"/></svg>Movement</span><b>19%</b><i></i></div>
+              <div class="fm" style="--share:.12;--c:var(--navy)"><span><svg><use href="#i-humid"/></svg>Humidity</span><b>12%</b><i></i></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 · the problem -->
+      <section class="panel panel--warm problem" id="how" aria-labelledby="problem-title">
+        <div class="problem__grid">
+          <div class="problem__copy">
+            <h2 class="h2" id="problem-title" data-reveal>The two-hour rule is a guess.</h2>
+            <p class="lede" data-reveal>Heat, sweat, water and the strength of the sun all change how fast SPF breaks down. A timer on your phone can’t feel any of that.</p>
+            <ul class="drivers">
+              <li data-reveal><span><svg aria-hidden="true"><use href="#i-sun"/></svg></span>Strong sun</li>
+              <li data-reveal><span><svg aria-hidden="true"><use href="#i-therm"/></svg></span>Heat</li>
+              <li data-reveal><span><svg aria-hidden="true"><use href="#i-move"/></svg></span>Sweat</li>
+              <li data-reveal><span><svg aria-hidden="true"><use href="#i-drop"/></svg></span>Water</li>
+            </ul>
+          </div>
+
+          <div class="problem__stage" data-problem-stage>
+            <figure class="chartcard" data-problem-chart data-reveal>
+              <div class="chartcard__head">
+                <span class="chartcard__badge"><svg aria-hidden="true"><use href="#i-shield"/></svg></span>
+                <span class="chartcard__titles"><b>Same SPF 50, two mornings</b><small>Protection remaining</small></span>
+              </div>
+              <svg class="chart__svg" viewBox="0 0 640 380" role="img" aria-labelledby="chart-title chart-desc">
+                <title id="chart-title">Same sunscreen, two different mornings</title>
+                <desc id="chart-desc">In the shade, SPF 50 still has more than half its protection after three hours. On a humid run it has worn off by 1 hour 20, well before the two-hour timer goes off.</desc>
+                <defs>
+                  <linearGradient id="fill-shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2ECC71" stop-opacity=".1"/><stop offset="1" stop-color="#2ECC71" stop-opacity="0"/></linearGradient>
+                  <linearGradient id="fill-run" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5A1F" stop-opacity=".18"/><stop offset="1" stop-color="#FF5A1F" stop-opacity="0"/></linearGradient>
+                </defs>
+                <g class="chart__grid" data-chart-grid></g>
+                <rect class="chart__zone" x="56" y="290" width="560" height="42" rx="8"/>
+                <text class="chart__zone-label" x="68" y="316">Reapply</text>
+                <path class="chart__area chart__area--shade" data-chart-area="shade" fill="url(#fill-shade)"/>
+                <path class="chart__area chart__area--run" data-chart-area="run" fill="url(#fill-run)"/>
+                <line class="chart__timer" x1="429" y1="36" x2="429" y2="332"/>
+                <text class="chart__timer-label" x="437" y="52">Two-hour timer</text>
+                <path class="chart__line chart__line--shade" data-chart-line="shade"/>
+                <path class="chart__line chart__line--run" data-chart-line="run"/>
+                <circle class="chart__dot chart__dot--run" r="7" data-chart-dot="run"/>
+                <circle class="chart__dot chart__dot--shade" r="7" data-chart-dot="shade"/>
+                <g class="chart__note chart__note--run" data-chart-note="run"><text data-chart-note-text="run">Humid run</text></g>
+                <g class="chart__note chart__note--shade" data-chart-note="shade"><text data-chart-note-text="shade">In the shade, 55% left</text></g>
+                <g class="chart__axis" data-chart-axis></g>
+              </svg>
+              <figcaption>Illustrative, from Sureva’s depletion model.</figcaption>
+            </figure>
+
+            <div class="pfloat pfloat--timer" aria-hidden="true">
+              <div class="card pchip" data-reveal>
+                <span class="pchip__badge"><svg><use href="#i-time"/></svg></span>
+                <span class="pchip__text"><small>Phone timer</small><b>Reapply at 2:00</b></span>
+              </div>
+            </div>
+
+            <div class="pfloat pfloat--alert" aria-hidden="true">
+              <div class="card pnote" data-problem-alert>
+                <img class="card__appicon" src="/brand/apple-touch-icon.png" alt="" width="36" height="36" />
+                <div class="card__notif-body">
+                  <p class="card__meta"><span>Sureva</span><span>now</span></p>
+                  <p class="card__title">Time to reapply</p>
+                  <p class="card__text">1 h 20 into your run. The humidity wore it down early.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 · how it works, in three moves -->
+      <section class="steps" aria-labelledby="steps-title">
+        <div class="steps__head">
+          <h2 class="h2" id="steps-title" data-reveal>Start it. Wear it. Reapply when it says.</h2>
+          <p class="lede" data-reveal>No timer to set and nothing to keep track of. Sureva does the counting and tells you once, when it matters.</p>
+        </div>
+        <ol class="steps__list">
+          <li class="step" data-reveal>
+            <div class="step__art" aria-hidden="true">
+              <div class="mini mini--setup">
+                <p class="mini__title">New session</p>
+                <p class="mini__label">Sunscreen</p>
+                <p class="mini__chips"><span>SPF 30</span><span class="is-on">SPF 50</span></p>
+                <p class="mini__label">Water resistance</p>
+                <p class="mini__chips"><span>None</span><span>40 min</span><span class="is-on">80 min</span></p>
+                <p class="mini__place"><span class="mini__badge"><svg><use href="#i-umbrella"/></svg></span><span><b>Beach</b><small>Found from your location</small></span></p>
+                <span class="mini__cta">Start session</span>
+              </div>
+            </div>
+            <h3 class="step__title"><span class="step__n">1</span>Start a session</h3>
+            <p class="step__text">Tell the app your SPF and how water-resistant it is. It works out where you are, from the beach to the ski slope.</p>
+          </li>
+          <li class="step" data-reveal>
+            <div class="step__art" aria-hidden="true">
+              <div class="mini mini--live">
+                <div class="mini__ring" style="--p:.74"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/><circle cx="50" cy="50" r="42" pathLength="1"/></svg><span><b>74%</b><small>Protected</small></span></div>
+                <div class="mini__bars">
+                  <p style="--c:var(--orange);--v:.82"><span>UV intensity</span><i></i></p>
+                  <p style="--c:var(--warning);--v:.56"><span>Heat &amp; humidity</span><i></i></p>
+                  <p style="--c:#3b82c4;--v:.4"><span>Water</span><i></i></p>
+                  <p style="--c:var(--navy);--v:.3"><span>Activity</span><i></i></p>
+                </div>
+              </div>
+            </div>
+            <h3 class="step__title"><span class="step__n">2</span>Wear it in the sun</h3>
+            <p class="step__text">Clip it where the sun lands. Every 30 seconds it reads UV, heat, humidity, movement and water, and keeps a running estimate of what’s left.</p>
+          </li>
+          <li class="step" data-reveal>
+            <div class="step__art" aria-hidden="true">
+              <div class="mini mini--alert">
+                <div class="card mini__notif">
+                  <img class="card__appicon" src="/brand/apple-touch-icon.png" alt="" width="36" height="36" />
+                  <div class="card__notif-body">
+                    <p class="card__meta"><span>Sureva</span><span>now</span></p>
+                    <p class="card__title">Time to reapply</p>
+                    <p class="card__text">Your protection is down to 20%.</p>
+                  </div>
+                </div>
+                <span class="mini__device"><img src="/media/float/520/012.webp" alt="" width="260" height="162" loading="lazy" decoding="async" /><i></i></span>
+                <span class="mini__done"><svg><use href="#i-check"/></svg>I reapplied</span>
+              </div>
+            </div>
+            <h3 class="step__title"><span class="step__n">3</span>Reapply when it buzzes</h3>
+            <p class="step__text">The amber light comes on and your phone gets one alert. Reapply, tap to confirm, and the count starts again from full.</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- 4 · what it measures, and the maths it does with it -->
+      <section class="measures" aria-labelledby="measures-title" data-measures>
+        <div class="measures__head">
+          <h2 class="h2" id="measures-title" data-reveal>It reads what your sunscreen is up against.</h2>
+          <p class="lede" data-reveal>Four sensors, sampled every few seconds. The app turns them into one answer: how long you’ve actually got.</p>
+        </div>
+        <div class="measures__grid">
+          <div class="measures__sticky">
+            <div class="calc" data-calc>
+              <div class="calc__ring">
+                <svg viewBox="0 0 200 200" aria-hidden="true">
+                  <circle class="calc__track" cx="100" cy="100" r="86"/>
+                  <circle class="calc__fill" cx="100" cy="100" r="86"/>
+                </svg>
+                <div class="calc__centre">
+                  <small>Reapply in</small>
+                  <b data-calc-time>2 h 00</b>
+                  <span data-calc-clock>the two-hour guess</span>
+                </div>
+              </div>
+              <ul class="calc__factors" aria-label="Conditions counted so far">
+                <li data-calc-factor="0">UV 8.2</li>
+                <li data-calc-factor="1">31°C</li>
+                <li data-calc-factor="2">78% humidity</li>
+                <li data-calc-factor="3">Running</li>
+              </ul>
+              <p class="calc__tap" data-calc-tap><i class="calc__led"></i>We’ll tap you at <b data-calc-at>11:00</b>. Once.</p>
+            </div>
+          </div>
+          <div class="sensors">
+            <article class="sensor" data-sensor="0">
+              <div class="sensor__viz sensor__viz--uv" aria-hidden="true">
+                <svg viewBox="0 0 160 96"><path class="uv__track" d="M16 84a64 64 0 0 1 128 0"/><path class="uv__fill" d="M16 84a64 64 0 0 1 128 0" pathLength="1"/></svg>
+                <b data-count="8.2" data-decimals="1">0.0</b><small>Very high</small>
+              </div>
+              <h3>UV</h3>
+              <p>How strong the sun is, right where you are. Not the forecast for your city.</p>
+            </article>
+            <article class="sensor" data-sensor="1">
+              <div class="sensor__viz sensor__viz--heat" aria-hidden="true">
+                <span class="heat__bar"><i></i></span>
+                <b><span data-count="31" data-decimals="0">0</span>°C</b><small>Skin-level heat</small>
+              </div>
+              <h3>Heat</h3>
+              <p>Warm skin and hot air break sunscreen down faster.</p>
+            </article>
+            <article class="sensor" data-sensor="2">
+              <div class="sensor__viz sensor__viz--humid" aria-hidden="true">
+                <span class="humid__drop"><svg viewBox="0 0 120 40" preserveAspectRatio="none"><path d="M0 20 Q15 8 30 20 T60 20 T90 20 T120 20 V40 H0Z"/></svg></span>
+                <b><span data-count="78" data-decimals="0">0</span>%</b><small>Humidity</small>
+              </div>
+              <h3>Humidity</h3>
+              <p>Sweat that can’t evaporate takes sunscreen with it.</p>
+            </article>
+            <article class="sensor" data-sensor="3">
+              <div class="sensor__viz sensor__viz--move" aria-hidden="true">
+                <span class="move__trace"><svg viewBox="0 0 240 60" preserveAspectRatio="none"><path d="M0 30 L12 30 L18 12 L26 48 L34 20 L42 38 L50 30 L60 30 L72 30 L78 10 L86 50 L94 18 L102 40 L110 30 L120 30 L132 30 L138 12 L146 48 L154 20 L162 38 L170 30 L180 30 L192 30 L198 10 L206 50 L214 18 L222 40 L230 30 L240 30"/></svg></span>
+                <b>Running</b><small>Motion</small>
+              </div>
+              <h3>Movement</h3>
+              <p>Running, swimming, a towel, a backpack strap: friction wears it away.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · use cases: the same sunscreen on six different days -->
+      <section class="days" id="days" aria-labelledby="days-title" data-days>
+        <div class="days__head">
+          <h2 class="h2" id="days-title" data-reveal>Same SPF 50.<br /> Six days out. Six different answers.</h2>
+          <p class="lede" data-reveal>Where you are and what you’re doing decide how long sunscreen lasts. A two-hour timer gets one of these days right.</p>
+        </div>
+        <div class="days__track" data-days-track tabindex="0" role="region" aria-label="Six example days, scrolls sideways">
+          <article class="day" data-day="beach" data-reveal>
+            <p class="day__place"><span class="day__badge"><svg aria-hidden="true"><use href="#i-umbrella"/></svg></span>Beach day</p>
+            <p class="day__time"><b>1 h 04</b><span>until it says reapply</span></p>
+            <p class="day__text">Every swim and towel-dry takes a bite out of SPF 50. The second swim is what tips it over.</p>
+            <ul class="day__chips"><li>UV 9</li><li>28°C</li><li>2 swims</li></ul>
+            <svg class="day__chart" viewBox="0 0 300 92" aria-hidden="true" data-day-chart></svg>
+          </article>
+          <article class="day" data-day="paddle" data-reveal>
+            <p class="day__place"><span class="day__badge"><svg aria-hidden="true"><use href="#i-wave"/></svg></span>Paddleboarding</p>
+            <p class="day__time"><b>1 h 23</b><span>until it says reapply</span></p>
+            <p class="day__text">One splash barely registers. Fourteen of them, plus the glare off the water, add up fast.</p>
+            <ul class="day__chips"><li>UV 9</li><li>27°C</li><li>14 splashes</li></ul>
+            <svg class="day__chart" viewBox="0 0 300 92" aria-hidden="true" data-day-chart></svg>
+          </article>
+          <article class="day" data-day="ski" data-reveal>
+            <p class="day__place"><span class="day__badge"><svg aria-hidden="true"><use href="#i-snow"/></svg></span>Ski day</p>
+            <p class="day__time"><b>1 h 31</b><span>until it says reapply</span></p>
+            <p class="day__text">It feels cold, but fresh snow bounces most of the UV straight back up at you. The sensor sees all of it.</p>
+            <ul class="day__chips"><li>UV 11+</li><li>−3°C</li><li>Skiing hard</li></ul>
+            <svg class="day__chart" viewBox="0 0 300 92" aria-hidden="true" data-day-chart></svg>
+          </article>
+          <article class="day" data-day="run" data-reveal>
+            <p class="day__place"><span class="day__badge"><svg aria-hidden="true"><use href="#i-move"/></svg></span>Lunchtime run</p>
+            <p class="day__time"><b>1 h 40</b><span>until it says reapply</span></p>
+            <p class="day__text">Hot, humid and moving fast. Sweat lifts sunscreen off long before the sun would have.</p>
+            <ul class="day__chips"><li>UV 9</li><li>32°C</li><li>76% humidity</li></ul>
+            <svg class="day__chart" viewBox="0 0 300 92" aria-hidden="true" data-day-chart></svg>
+          </article>
+          <article class="day" data-day="fest" data-reveal>
+            <p class="day__place"><span class="day__badge"><svg aria-hidden="true"><use href="#i-music"/></svg></span>Festival</p>
+            <p class="day__time"><b>1 h 53</b><span>until it says reapply</span></p>
+            <p class="day__text">Four hours on your feet in the afternoon sun. It keeps count while you lose track of time.</p>
+            <ul class="day__chips"><li>UV 9</li><li>31°C</li><li>Dancing</li></ul>
+            <svg class="day__chart" viewBox="0 0 300 92" aria-hidden="true" data-day-chart></svg>
+          </article>
+          <article class="day" data-day="garden" data-reveal>
+            <p class="day__place"><span class="day__badge"><svg aria-hidden="true"><use href="#i-leaf"/></svg></span>Gardening</p>
+            <p class="day__time"><b>2 h 00</b><span>until it says reapply</span></p>
+            <p class="day__text">Gentle sun and slow work leave plenty in reserve. It still checks in at two hours. It never lets more than that go by.</p>
+            <ul class="day__chips"><li>UV 6</li><li>23°C</li><li>Pottering</li></ul>
+            <svg class="day__chart" viewBox="0 0 300 92" aria-hidden="true" data-day-chart></svg>
+          </article>
+        </div>
+        <div class="days__foot">
+          <p class="days__note">Modelled with the algorithm the app runs, for SPF 50 with 80-minute water resistance on medium skin. The dashed line is the two-hour mark.</p>
+          <div class="days__nav">
+            <button class="days__btn" type="button" data-days-prev aria-label="Previous days"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+            <button class="days__btn days__btn--next" type="button" data-days-next aria-label="More days"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 · inside: the signature moment -->
+      <section class="inside" id="inside" aria-labelledby="inside-title" data-inside>
+        <div class="inside__pin" data-inside-pin>
+          <div class="inside__head">
+            <h2 class="h2" id="inside-title">Everything it needs. Nothing it doesn’t.</h2>
+            <p class="lede">4.8 millimetres tall, sealed shut, charged without a cable.</p>
+          </div>
+          <div class="inside__stage" data-inside-stage>
+            <div class="inside__frame" data-inside-frame>
+              <img class="inside__still" src="/media/explode/760/000.webp" alt="Sureva on its wireless charging pad, taken apart: the bone-white lid with its button and UV window, the sensor board, the battery, the charging coil, and the aluminium base with the Sureva mark engraved on its side." loading="lazy" decoding="async" />
+              <canvas class="inside__canvas" data-inside-canvas aria-hidden="true"></canvas>
+            </div>
+            <svg class="inside__lines" data-inside-lines aria-hidden="true"></svg>
+            <div class="callout" data-callout data-anchor="charger" data-group="dock" data-side="left">
+              <b>Wireless charging pad</b><span>Set it down to charge. Nothing plugs in.</span>
+            </div>
+            <div class="callout" data-callout data-anchor="uv" data-group="lid" data-side="right">
+              <b>Smoked-glass UV window</b><span>The UV sensor looks straight at the sky through it.</span>
+            </div>
+            <div class="callout" data-callout data-anchor="button" data-group="lid" data-side="left">
+              <b>Button and amber light</b><span>Press it when you put sunscreen on. The light blinks when it’s time again.</span>
+            </div>
+            <div class="callout" data-callout data-anchor="th" data-group="board" data-side="left">
+              <b>Sensor board</b><span>UV, temperature, humidity and motion on one board.</span>
+            </div>
+            <div class="callout" data-callout data-anchor="shield" data-group="board" data-side="right">
+              <b>Bluetooth</b><span>Streams to the app on your phone.</span>
+            </div>
+            <div class="callout" data-callout data-anchor="battery" data-group="battery" data-side="right">
+              <b>Sealed battery</b><span>Rechargeable, never opened.</span>
+            </div>
+            <div class="callout" data-callout data-anchor="coil" data-group="coil" data-side="left">
+              <b>Charging coil</b><span>Picks up power from the pad. No port to let water in.</span>
+            </div>
+            <div class="callout" data-callout data-anchor="logo" data-group="base" data-side="right">
+              <b>Aluminium base</b><span>Bead-blasted, with the Sureva mark engraved on the side.</span>
+            </div>
+          </div>
+          <p class="inside__caption" data-inside-caption aria-hidden="true"></p>
+        </div>
+      </section>
+
+      <!-- 7 · specs -->
+      <section class="specs" aria-labelledby="specs-title" data-specs>
+        <div class="specs__grid">
+          <div class="specs__copy">
+            <h2 class="h2" id="specs-title" data-reveal>Made to wear. Not to notice.</h2>
+            <dl class="specs__list" data-reveal-group>
+              <div data-reveal><dt>Size</dt><dd>26 × 13 × 4.8 mm</dd></div>
+              <div data-reveal><dt>Body</dt><dd>Sealed and waterproof</dd></div>
+              <div data-reveal><dt>Finish</dt><dd>Bone-white lid, aluminium base</dd></div>
+              <div data-reveal><dt>Charging</dt><dd>On its wireless pad. No ports.</dd></div>
+              <div data-reveal><dt>Sensors</dt><dd>UV, temperature, humidity, motion</dd></div>
+              <div data-reveal><dt>Connects</dt><dd>The Sureva app on iPhone</dd></div>
+            </dl>
+          </div>
+          <div class="specs__views">
+            <figure class="view view--plan" data-view="plan">
+              <div class="view__crop"><img src="/media/views/800/plan.webp" srcset="/media/views/800/plan.webp 800w, /media/views/1600/plan.webp 1600w" sizes="(max-width: 900px) 140vw, 70vw" alt="Sureva from above: a 26 by 13 millimetre pill with the UV window at one end, the button in the middle and the amber light at the other end." loading="lazy" decoding="async" /><svg class="view__dims" data-dims aria-hidden="true"></svg></div>
+            </figure>
+            <figure class="view view--side" data-view="side">
+              <div class="view__crop"><img src="/media/views/800/side.webp" srcset="/media/views/800/side.webp 800w, /media/views/1600/side.webp 1600w" sizes="(max-width: 900px) 140vw, 70vw" alt="Sureva from the side: 4.8 millimetres tall, a bone-white top on an aluminium base with the Sureva mark engraved on it." loading="lazy" decoding="async" /><svg class="view__dims" data-dims aria-hidden="true"></svg></div>
+            </figure>
+          </div>
+        </div>
+        <div class="wear" data-reveal>
+          <h3 class="wear__title">Clip it where the sun lands.</h3>
+          <ul class="wear__list">
+            <li>Hat or visor</li>
+            <li>Shoulder strap</li>
+            <li>Chest clip</li>
+            <li>Upper arm</li>
+            <li>Wrist</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 8 · the app -->
+      <section class="panel panel--wash appsec" id="app" aria-labelledby="app-title" data-appsec>
+        <div class="appsec__head">
+          <h2 class="h2" id="app-title" data-reveal>One notification. One action.</h2>
+          <p class="lede" data-reveal>The app does the thinking. When it’s time, you get one alert: reapply now. Everything else waits until you want it.</p>
+        </div>
+        <div class="phones" data-phones>
+          <figure class="phones__item" data-phone-slot="home" data-speed="-40"><figcaption><b>Home</b><span>Today at a glance</span></figcaption></figure>
+          <figure class="phones__item" data-phone-slot="forecast" data-speed="30"><figcaption><b>Forecast</b><span>Plan around the peak</span></figcaption></figure>
+          <figure class="phones__item phones__item--lead" data-phone-slot="session" data-speed="-80"><figcaption><b>Session</b><span>Live protection</span></figcaption></figure>
+          <figure class="phones__item" data-phone-slot="insights" data-speed="40"><figcaption><b>Insights</b><span>Your patterns, read for you</span></figcaption></figure>
+          <figure class="phones__item" data-phone-slot="passport" data-speed="-20"><figcaption><b>Passport</b><span>Every place you’ve been in the sun</span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 9 · after every session -->
+      <section class="report" id="report" aria-labelledby="report-title" data-report>
+        <div class="report__grid">
+          <div class="report__copy">
+            <h2 class="h2" id="report-title" data-reveal>Every session ends with a straight answer.</h2>
+            <p class="lede" data-reveal>When you head inside, the app scores the day and tells you, in plain words, what wore your sunscreen down and what to do differently next time.</p>
+            <ul class="report__list">
+              <li data-reveal><b>A score out of 100</b><span>Built from how quickly you answered alerts, how long you went unprotected and how well you kept ahead of it.</span></li>
+              <li data-reveal><b>What drove it</b><span>Sun, heat, water or sweat, split by how much each one cost you.</span></li>
+              <li data-reveal><b>The moments that mattered</b><span>Your best-protected stretch, the fastest drop, any alert you missed.</span></li>
+              <li data-reveal><b>A quick check-in</b><span>Three taps on how your skin felt. Your answers tune how early it nudges you next time.</span></li>
+            </ul>
+          </div>
+          <div class="report__stage" data-report-stage>
+            <div class="report__phone" data-report-phone></div>
+            <div class="report__float report__float--alert" aria-hidden="true">
+              <div class="card rchip" data-reveal>
+                <span class="rchip__badge"><svg><use href="#i-check"/></svg></span>
+                <span class="rchip__text"><small>Alert at 12:16 PM</small><b>Reapplied in 4 min</b></span>
+              </div>
+            </div>
+            <div class="report__float report__float--checkin" aria-hidden="true">
+              <div class="card checkin" data-reveal>
+                <p class="checkin__q">How does your skin feel after this session?</p>
+                <p class="checkin__opt is-on"><i></i>No reaction, feels normal</p>
+                <p class="checkin__opt"><i></i>Feels warm or flushed</p>
+                <p class="checkin__opt"><i></i>Feels tight or dry</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 · what if: replay a day with one thing changed -->
+      <section class="panel panel--wash whatif" id="whatif" aria-labelledby="whatif-title" data-whatif>
+        <div class="whatif__head">
+          <h2 class="h2" id="whatif-title" data-reveal>Replay any day. Change one thing.</h2>
+          <p class="lede" data-reveal>What if you’d picked a more water-resistant sunscreen, or reapplied when it said? The app replays a real session with your change, minute by minute. Try it on this Saturday at the beach.</p>
+        </div>
+        <div class="sim" data-reveal>
+          <div class="sim__controls" role="group" aria-label="Change the day">
+            <fieldset class="seg" data-sim-control="wr">
+              <legend>Water resistance</legend>
+              <div class="seg__opts"><label><input type="radio" name="sim-wr" value="40" checked /><span>40 min</span></label> <label><input type="radio" name="sim-wr" value="80" /><span>80 min</span></label></div>
+            </fieldset>
+            <fieldset class="seg" data-sim-control="delay">
+              <legend>Put it on</legend>
+              <div class="seg__opts"><label><input type="radio" name="sim-delay" value="0" checked /><span>On arrival</span></label> <label><input type="radio" name="sim-delay" value="30" /><span>30 min late</span></label></div>
+            </fieldset>
+            <fieldset class="seg" data-sim-control="activity">
+              <legend>Activity</legend>
+              <div class="seg__opts"><label><input type="radio" name="sim-activity" value="low" /><span>Low</span></label> <label><input type="radio" name="sim-activity" value="moderate" checked /><span>Moderate</span></label> <label><input type="radio" name="sim-activity" value="high" /><span>High</span></label></div>
+            </fieldset>
+            <fieldset class="seg" data-sim-control="reapply">
+              <legend>Reapply</legend>
+              <div class="seg__opts"><label><input type="radio" name="sim-reapply" value="never" checked /><span>Never</span></label> <label><input type="radio" name="sim-reapply" value="timer" /><span>Every 2 h</span></label> <label><input type="radio" name="sim-reapply" value="alert" /><span>When it says</span></label></div>
+            </fieldset>
+            <button class="sim__reset" type="button" data-sim-reset disabled>Back to what I did</button>
+          </div>
+          <div class="sim__view">
+            <div class="sim__top">
+              <p class="sim__title"><b>Saturday, Malibu Beach</b><small>11 AM to 3 PM, two swims, SPF 30</small></p>
+              <ul class="sim__legend" aria-hidden="true">
+                <li class="is-actual">What you did</li>
+                <li class="is-replay">Replay</li>
+              </ul>
+            </div>
+            <svg class="sim__chart" viewBox="0 0 640 300" role="img" aria-labelledby="sim-chart-title" data-sim-chart>
+              <title id="sim-chart-title">Protection through the day, as it happened and with your changes</title>
+            </svg>
+            <div class="sim__results" aria-live="polite">
+              <p class="sim__stat"><small>First reapply alert</small><b data-sim-out="alert">—</b><em data-sim-delta="alert"></em></p>
+              <p class="sim__stat"><small>Time below 20%</small><b data-sim-out="unprotected">—</b><em data-sim-delta="unprotected"></em></p>
+              <p class="sim__stat"><small>UV that reached your skin</small><b data-sim-out="med">—</b><em data-sim-delta="med"></em></p>
+            </div>
+            <p class="sim__note">Blue marks a swim, green a reapplication. UV dose is in MEDs, the standard unit for a dose of sunburn-causing UV, for medium skin.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 · it learns you -->
+      <section class="learns" aria-labelledby="learns-title">
+        <div class="learns__head">
+          <h2 class="h2" id="learns-title" data-reveal>The more you wear it, the better it knows you.</h2>
+          <p class="lede" data-reveal>Every session teaches it something: when your protection tends to run out, which conditions wear it down fastest, how your skin felt afterwards. The app turns that into advice for tomorrow.</p>
+        </div>
+        <div class="bento">
+          <article class="tile-x tile-x--forecast" data-reveal>
+            <h3 class="tile-x__title">Plan around the peak</h3>
+            <p class="tile-x__text">A seven-day UV outlook, read against your own numbers, so you know the night before when tomorrow will be a big one.</p>
+            <div class="card tile-x__notif" aria-hidden="true">
+              <img class="card__appicon" src="/brand/apple-touch-icon.png" alt="" width="36" height="36" />
+              <div class="card__notif-body">
+                <p class="card__meta"><span>Sureva</span><span>8:02 PM</span></p>
+                <p class="card__title">Big sun day tomorrow</p>
+                <p class="card__text">UV peaks at 9 around 1 PM and it’ll hit 31°C, past the heat where yours starts wearing off faster. Pack SPF 50.</p>
+              </div>
+            </div>
+            <div class="week" aria-hidden="true">
+              <span class="week__d is-hi" style="--v:.82"><b>9</b><i></i><small>Sat</small></span>
+              <span class="week__d is-hi" style="--v:.91"><b>10</b><i></i><small>Sun</small></span>
+              <span class="week__d is-hi" style="--v:.64"><b>7</b><i></i><small>Mon</small></span>
+              <span class="week__d is-mid" style="--v:.45"><b>5</b><i></i><small>Tue</small></span>
+              <span class="week__d is-mid" style="--v:.27"><b>3</b><i></i><small>Wed</small></span>
+              <span class="week__d is-lo" style="--v:.18"><b>2</b><i></i><small>Thu</small></span>
+              <span class="week__d is-hi" style="--v:.55"><b>6</b><i></i><small>Fri</small></span>
+            </div>
+          </article>
+
+          <article class="tile-x tile-x--passport" data-reveal>
+            <h3 class="tile-x__title">Your sun passport</h3>
+            <p class="tile-x__text">Every place you’ve spent time in the sun, pinned on a map with what the UV was like there.</p>
+            <div class="pmap" aria-hidden="true">
+              <svg viewBox="0 0 300 220" preserveAspectRatio="xMidYMid slice">
+                <path class="pmap__land" d="M0 0h300v70c-26 8-34 30-60 36s-40-16-68-6-30 40-58 46-46-12-72-2S0 170 0 170z"/>
+                <path class="pmap__coast" d="M0 170c20-8 30-28 42-34 26-10 44 8 72 2s30-36 58-46 42 12 68 6 34-28 60-36"/>
+              </svg>
+              <span class="pmap__pin is-best" style="left:16%;top:70%"><b>9</b></span>
+              <span class="pmap__pin" style="left:38%;top:52%"><b>14</b></span>
+              <span class="pmap__pin" style="left:61%;top:40%"><b>6</b></span>
+              <span class="pmap__pin" style="left:80%;top:27%"><b>3</b></span>
+            </div>
+            <ul class="places" aria-hidden="true">
+              <li><span><b>Malibu Beach</b><small>9 sessions</small></span><em>UV 9.6</em></li>
+              <li><span><b>Santa Monica</b><small>14 sessions</small></span><em>UV 7.2</em></li>
+              <li><span><b>Joshua Tree</b><small>6 sessions</small></span><em>UV 8.9</em></li>
+            </ul>
+          </article>
+
+          <article class="tile-x tile-x--pattern" data-reveal>
+            <h3 class="tile-x__title">It spots your patterns</h3>
+            <p class="tile-x__big"><b>1–3 PM</b><span>is when your protection most often runs out. 8 of your last 12 alerts fired in that window.</span></p>
+          </article>
+
+          <article class="tile-x tile-x--numbers" data-reveal>
+            <h3 class="tile-x__title">It learns your numbers</h3>
+            <ul class="nums">
+              <li><span class="nums__icon"><svg aria-hidden="true"><use href="#i-therm"/></svg></span><b>29°C</b><span>Above this, your sunscreen wears off noticeably faster</span></li>
+              <li><span class="nums__icon"><svg aria-hidden="true"><use href="#i-humid"/></svg></span><b>74%</b><span>Humidity where sweat stops drying and starts lifting it</span></li>
+              <li><span class="nums__icon"><svg aria-hidden="true"><use href="#i-sun"/></svg></span><b>UV 6.5</b><span>Where your depletion rate jumps</span></li>
+            </ul>
+          </article>
+
+          <article class="tile-x tile-x--habit" data-reveal>
+            <div class="tile-x__split">
+              <div>
+                <h3 class="tile-x__title">Watch the habit stick</h3>
+                <p class="tile-x__text">Reapplied on time, month by month. Plus streaks, badges, and a PDF summary of your season whenever you want one.</p>
+              </div>
+              <div class="habit" aria-hidden="true">
+                <p class="habit__head"><b>88%</b><span>on time this month, up from 61% in April</span></p>
+                <div class="habit__bars">
+                  <span style="--v:.61"><i></i><small>Apr</small></span>
+                  <span style="--v:.7"><i></i><small>May</small></span>
+                  <span style="--v:.79"><i></i><small>Jun</small></span>
+                  <span style="--v:.84"><i></i><small>Jul</small></span>
+                  <span class="is-now" style="--v:.88"><i></i><small>Aug</small></span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 12 · compared with the alternatives -->
+      <section class="compare" aria-labelledby="compare-title">
+        <div class="compare__head">
+          <h2 class="h2" id="compare-title" data-reveal>Why not just set a timer?</h2>
+          <p class="lede" data-reveal>A timer, a weather app and a UV sticker each know part of the story. Sureva is the only one that knows what your sunscreen is actually going through.</p>
+        </div>
+        <div class="compare__wrap" data-reveal>
+          <table class="ctable">
+            <caption class="sr-only">What each option knows about your sunscreen</caption>
+            <thead>
+              <tr>
+                <td></td>
+                <th scope="col">Phone timer</th>
+                <th scope="col">Weather app</th>
+                <th scope="col">UV sticker</th>
+                <th scope="col" class="is-us"><span class="wordmark wordmark--sm" role="img" aria-label="Sureva"></span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Measures the UV on you</th><td><i class="no">No</i></td><td>A forecast for your area</td><td><i class="yes">Yes</i></td><td class="is-us"><i class="yes">Yes</i></td></tr>
+              <tr><th scope="row">Accounts for heat, humidity and sweat</th><td><i class="no">No</i></td><td><i class="no">No</i></td><td><i class="no">No</i></td><td class="is-us"><i class="yes">Yes</i></td></tr>
+              <tr><th scope="row">Knows when you swim</th><td><i class="no">No</i></td><td><i class="no">No</i></td><td><i class="no">No</i></td><td class="is-us"><i class="yes">Yes</i></td></tr>
+              <tr><th scope="row">Knows your SPF and water resistance</th><td><i class="no">No</i></td><td><i class="no">No</i></td><td><i class="no">No</i></td><td class="is-us"><i class="yes">Yes</i></td></tr>
+              <tr><th scope="row">Tells you when to reapply</th><td>Every 2 hours, whatever you’re doing</td><td><i class="no">No</i></td><td>When it changes colour</td><td class="is-us">One alert, when it’s time</td></tr>
+              <tr><th scope="row">Keeps your history and patterns</th><td><i class="no">No</i></td><td><i class="no">No</i></td><td><i class="no">No</i></td><td class="is-us"><i class="yes">Yes</i></td></tr>
+              <tr><th scope="row">Reusable</th><td><i class="yes">Yes</i></td><td><i class="yes">Yes</i></td><td>Single use</td><td class="is-us">Rechargeable</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 13 · questions -->
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="faq__grid">
+          <h2 class="h2" id="faq-title" data-reveal>Questions, answered.</h2>
+          <div class="faq__list" data-reveal>
+            <details class="qa" name="faq">
+              <summary>Does it replace sunscreen?</summary>
+              <p>No. You still choose and apply your own sunscreen. Sureva tells you when it’s time to put more on.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>How does it know my sunscreen has worn off?</summary>
+              <p>It works it out. Every 30 seconds it reads UV, temperature, humidity, movement and water, and combines them with the SPF and water resistance you entered. Each condition wears sunscreen down at its own rate, and each swim takes a bite out of it. When the estimate drops low enough for your skin type, it tells you.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>What if it’s a mild day?</summary>
+              <p>It never lets more than two hours go by without a reminder, however gentle the conditions. On most active days it will ask sooner.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>What happens if I miss the alert?</summary>
+              <p>It asks again 15 minutes later, and once more at 30, until you confirm you’ve reapplied.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>Where do I wear it?</summary>
+              <p>Anywhere the sun reaches you: a hat brim, a shoulder strap, your chest or upper arm. It can sit on your wrist too, and it allows for the extra sun your wrist catches.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>Can I swim with it?</summary>
+              <p>Yes. It’s sealed, waterproof and has no ports. It also notices when you go in, because water is one of the fastest ways to lose protection.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>Is Sureva a medical device?</summary>
+              <p>No. It’s a general wellness product that helps you remember to reapply sunscreen and keep track of your UV exposure. It doesn’t diagnose, treat or prevent any condition.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>What data does it collect?</summary>
+              <p>UV readings, temperature, humidity, movement and water events from the device, the SPF and skin type you enter, and your location if you allow it. This data isn’t protected by HIPAA. The privacy policy, published before launch, will set out exactly what’s kept, who it’s shared with and how to delete it.</p>
+            </details>
+            <details class="qa" name="faq">
+              <summary>When can I get one?</summary>
+              <p>Sureva isn’t on sale yet. Join the waitlist and you’ll be the first to hear when it is.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 · waitlist -->
+      <section class="panel panel--sun signup" id="waitlist" aria-labelledby="signup-title">
+        <div class="signup__inner">
+          <h2 class="h2" id="signup-title" data-reveal>Get Sureva first.</h2>
+          <p class="lede" data-reveal>The sensors work and the app is built. We’re getting ready to make them. Join the list and we’ll email you once, when it’s ready.</p>
+          <form class="waitlist signup__form" data-waitlist data-reveal novalidate>
+            <label class="sr-only" for="signup-email">Email address</label>
+            <div class="field">
+              <input id="signup-email" type="email" name="email" inputmode="email" autocomplete="email" placeholder="Your email" required />
+              <button class="btn btn--primary" type="submit" data-magnetic>Join the waitlist</button>
+            </div>
+            <p class="waitlist__note" data-status role="status" aria-live="polite">Coming soon to iPhone. No spam.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__top">
+        <a class="footer__brand" href="#top" aria-label="Sureva, back to top"><span class="wordmark" aria-hidden="true"></span></a>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="#how">How it works</a>
+          <a href="#days">Use cases</a>
+          <a href="#inside">Inside</a>
+          <a href="#app">The app</a>
+          <a href="#faq">FAQ</a>
+          <a href="/privacy">Privacy</a>
+        </nav>
+      </div>
+      <p class="footer__legal">Sureva is a general wellness product. It tracks UV exposure and helps you remember to reapply sunscreen. It is not a medical device and does not diagnose, treat or prevent any disease. Always follow the directions on your sunscreen.</p>
+      <p class="footer__copy">© 2026 Sureva</p>
+    </footer>
+
+    <!-- floating iOS prompt, as on bevel.health -->
+    <aside class="qr-card" data-qr-card aria-label="Sureva for iPhone" hidden>
+      <button class="qr-card__main" type="button" data-open-waitlist>
+        <span class="qr-card__code" data-qr aria-hidden="true"></span>
+        <span class="qr-card__text"><b>Sureva for iPhone</b><span>Scan to get early access on your phone.</span></span>
+      </button>
+      <button class="qr-card__close" type="button" aria-label="Hide this prompt" data-qr-close><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </aside>
+
+    <dialog class="sheet" data-sheet aria-labelledby="sheet-title">
+      <div class="sheet__panel">
+        <button class="sheet__close" type="button" aria-label="Close" data-sheet-close><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <img class="sheet__icon" src="/brand/apple-touch-icon.png" alt="" width="72" height="72" />
+        <h2 class="sheet__title" id="sheet-title">Sureva is coming to iPhone</h2>
+        <p class="sheet__body">Leave your email and we’ll send one note when the app and the wearable are ready.</p>
+        <form class="waitlist" data-waitlist novalidate>
+          <label class="sr-only" for="sheet-email">Email address</label>
+          <div class="field">
+            <input id="sheet-email" type="email" name="email" inputmode="email" autocomplete="email" placeholder="Your email" required />
+            <button class="btn btn--primary" type="submit">Join the waitlist</button>
+          </div>
+          <p class="waitlist__note" data-status role="status" aria-live="polite">One email when it’s ready. Nothing else.</p>
+        </form>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
